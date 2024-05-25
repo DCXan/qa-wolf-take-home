@@ -3,7 +3,7 @@ const { chromium } = require("playwright");
 
 async function saveHackerNewsArticles() {
   // launch browser
-  const browser = await chromium.launch({ headless: false });
+ const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -11,9 +11,18 @@ async function saveHackerNewsArticles() {
   await page.goto("https://news.ycombinator.com");
 
   const element = await page.waitForSelector(".titleline");
-  const labelText = await element.innerText();
 
-  console.log(labelText);
+  const labelText = await page.evaluate((element) => {
+    // Select all elements with class 'sitestr' within the element
+    const sitestrElements = element.querySelectorAll(".sitestr");
+    // Exclude the text content of 'sitestr' elements from the parent element's textContent
+    sitestrElements.forEach((sitestrElement) => {
+      sitestrElement.remove();
+    });
+    return element.textContent.trim(); // Return the text content after trimming leading and trailing whitespace
+  }, element);
+
+  console.log(labelText.replace(/\s\(\)$/, ''));
 
   await browser.close();
 }
