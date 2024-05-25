@@ -9,6 +9,13 @@ async function saveHackerNewsArticles() {
 
   // go to Hacker News
   await page.goto("https://news.ycombinator.com");
+
+  const element = await page.waitForSelector(".titleline");
+  const labelText = await element.innerText();
+
+  console.log(labelText);
+
+  await browser.close();
 }
 
 (async () => {
