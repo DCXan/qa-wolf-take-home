@@ -1,5 +1,6 @@
 // EDIT THIS FILE TO COMPLETE ASSIGNMENT QUESTION 1
 const { chromium } = require("playwright");
+const { CLIENT_RENEG_LIMIT } = require("tls");
 
 async function saveHackerNewsArticles() {
   // launch browser
@@ -23,9 +24,16 @@ async function saveHackerNewsArticles() {
     return element.textContent.trim().replace(/\s\(\)$/, ''); 
   }, titleElement);
 
+      // Find the <a> tag within the titleline element
+      const link = await titleElement.$('a');
+    
+      // Get the href attribute value
+      const href = await link.getAttribute('href');
+
   
 
   console.log(title);
+  console.log(href);
 
   await browser.close();
 }
