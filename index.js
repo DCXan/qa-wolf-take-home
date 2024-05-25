@@ -1,6 +1,8 @@
 // EDIT THIS FILE TO COMPLETE ASSIGNMENT QUESTION 1
 const { chromium } = require("playwright");
 
+let articles = [];
+
 async function saveHackerNewsArticles() {
   // launch browser
  const browser = await chromium.launch({ headless: false });
@@ -34,14 +36,14 @@ async function saveHackerNewsArticles() {
       const url = await link.getAttribute('href');
   
     
-  
-    console.log(title);
-    console.log(url);
-
+    // Store title and url in object and add each object to articles array
+    articles.push({title: title, url: url})
   }
   
 
   await browser.close();
+  console.log(articles)
+  console.log(articles.length)
 }
 
 (async () => {
