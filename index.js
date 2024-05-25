@@ -10,29 +10,36 @@ async function saveHackerNewsArticles() {
   // go to Hacker News
   await page.goto("https://news.ycombinator.com");
 
-  const titleElement = await page.waitForSelector(".titleline");
+  const titleElements = await page.$$('.titleline');
 
-  const title = await page.evaluate((element) => {
-    // Select all elements with class 'sitestr' within the element
-    const sitestrElements = element.querySelectorAll(".sitestr");
-    // Exclude the text content of 'sitestr' elements from the parent element's textContent
-    sitestrElements.forEach((sitestrElement) => {
-      sitestrElement.remove();
-    });
-    // Return the text content after trimming leading and trailing whitespace and remove the '()' 
-    return element.textContent.trim().replace(/\s\(\)$/, ''); 
-  }, titleElement);
+  for (let i = 0; i < 10; i++){
 
-    // Find the <a> tag within the titleline element
-    const link = await titleElement.$('a');
-    
-    // Get the href attribute value
-    const url = await link.getAttribute('href');
+    currentElement = titleElements[i];
 
+    const title = await page.evaluate((element) => {
+      // Select all elements with class 'sitestr' within the element
+      const sitestrElements = element.querySelectorAll(".sitestr");
+      // Exclude the text content of 'sitestr' elements from the parent element's textContent
+      sitestrElements.forEach((sitestrElement) => {
+        sitestrElement.remove();
+      });
+      // Return the text content after trimming leading and trailing whitespace and remove the '()' 
+      return element.textContent.trim().replace(/\s\(\)$/, ''); 
+    }, currentElement);
   
+      // Find the <a> tag within the titleline element
+      const link = await currentElement.$('a');
+      
+      // Get the href attribute value
+      const url = await link.getAttribute('href');
+  
+    
+  
+    console.log(title);
+    console.log(url);
 
-  console.log(title);
-  console.log(url);
+  }
+  
 
   await browser.close();
 }
